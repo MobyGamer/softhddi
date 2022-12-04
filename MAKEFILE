@@ -1,0 +1,48 @@
+LINK = tlink
+LFLAGS = /m /v /s
+ASM = tasm
+AFLAGS = /m /mx /la /s /zi /dMDL=TINY
+AMDL = __TINY__
+
+# This is 2.0 instead of 4.0, because the 4.0\tlib is buggy
+LIB = d:\tasm2.0\tlib
+LIBFLAGS = /c/0
+
+# default rule for making a .COM from an object module
+#.obj.com:
+#        $(LINK) $(LFLAGS) $<,,,amis$(MDL)
+
+# default rule for making an object module from an assembler source file
+.asm.obj:
+        $(ASM) $(AFLAGS) /D$(AMDL) $*
+
+# default rule for making an .EXE from an object module
+.obj.exe:
+        $(LINK) $(LFLAGS) $<,,,amis$(MDL)
+
+all:    softhddi.com
+
+amis.obj:       amis.asm amis.mac
+amishotk.obj:   amishotk.asm amis.mac
+amisutil.obj:   amisutil.asm amis.mac
+amipopup.obj:   amipopup.asm amis.mac
+
+amis$(MDL).lib: amis.obj amishotk.obj amisutil.obj amipopup.obj
+        del amis$(MDL).lib
+        $(LIB) $(LIBFLAGS) amis$(MDL) +amis+amishotk+amipopup+amisutil
+
+clean:
+        del softhddi.obj
+        del softhddi.com
+        del *.tds
+        del *.map
+        del *.lst
+
+softhddi.exe:   softhddi.obj amis$(MDL).lib
+
+softhddi.com:   softhddi.exe
+        tdstrip -s -c softhddi.exe softhddi.com
+        #del softhddi.exe
+
+softhddi.obj:   softhddi.asm amis.mac
+

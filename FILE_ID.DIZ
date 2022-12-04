@@ -1,0 +1,5 @@
+SOFTHDDI v1.0
+TSR that provides virtual hard drive lights
+and sounds for DOS systems that lack them.
+Great for systems with solid-state storage,
+ie. XT-IDE adapters using compact flash.

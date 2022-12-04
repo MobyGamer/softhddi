@@ -1,0 +1,16 @@
+SOFTHDDI
+Software Hard Disk Drive Indicators for DOS
+Provides simulated hard disk activity "LED"s and seeking sounds.
+Intended for MS-DOS systems with solid-state hard drives that lack both,
+so that disk activity can again be seen/heard.
+
+Three hard disk "indicators" are available, and can be enabled in any
+combination:
+
+- An on-screen "LED" that appears in the upper left corner
+- An audible "click" that simulates HDD head seek noise
+- Keyboard CAPSLOCK/NUMLOCK/SCROLLLOCK indicator LEDs
+
+Run "SOFTHDDI" with no arguments to see command-line usage.
+Visit https://github.com/MobyGamer/softhddi for more info and full
+source code.

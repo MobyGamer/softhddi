@@ -46,3 +46,7 @@ softhddi.com:   softhddi.exe
 
 softhddi.obj:   softhddi.asm amis.mac
 
+softhddi.zip:   softhddi.com softhddi.txt file_id.diz
+        del softhddi.zip
+        pkzip -ex softhddi.zip softhddi.com softhddi.txt file_id.diz
+

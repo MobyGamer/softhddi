@@ -111,8 +111,8 @@ Greetz to VileR, who drew a CGA mode4+mode6 "LED" bitmap on short notice :-)
                         ;this macro also takes care of declaring
                         ;segments in the required order
 
-VERSION_NUM equ 0010h   ;v1.0
-VERSION_STR equ "1.0"
+VERSION_NUM equ 0011h   ;v1.1
+VERSION_STR equ "1.1"
 
 ; Program behaviors that can be tuned by changing vars and re-assembling:
 ; (It isn't necessary to change these in most cases)
@@ -850,6 +850,7 @@ diskIntLeave ENDP
 ;our software indicators if so, or just JMP to the original int13 if not.
 
 ISP_HEADER 13h
+        pushf
         push    bx                      ;need an index register
         IF OMITFLOPPY
         cmp     dl,80h                  ;is the target for this call a HDD?
@@ -865,12 +866,14 @@ ISP_HEADER 13h
 doindicators:
         pop     bx                      ;restore changed bx
         call    diskIntEnter            ;start indicators
-        pushf                           ;simulate interrupt call
+        ;Simulate interrupt call to original INT 13h
+        ;pushf                          ;not needed, orig. flags already pushed
         call    ORIG_INT13h             ;pass to original disk interrupt
         call    diskIntLeave            ;stop indicators
         iret                            ;leave int13
 noindicators:
         pop     bx                      ;restore potentially-changed bx
+        popf                            ;restore flags on entry
         jmp     ORIG_INT13h
 
 resident_code_size equ offset $

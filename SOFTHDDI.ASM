@@ -850,7 +850,7 @@ diskIntLeave ENDP
 ;our software indicators if so, or just JMP to the original int13 if not.
 
 ISP_HEADER 13h
-        pushf
+        pushf                           ;preserve flags on entry
         push    bx                      ;need an index register
         IF OMITFLOPPY
         cmp     dl,80h                  ;is the target for this call a HDD?
@@ -869,11 +869,13 @@ doindicators:
         ;Simulate interrupt call to original INT 13h
         ;pushf                          ;not needed, orig. flags already pushed
         call    ORIG_INT13h             ;pass to original disk interrupt
+        pushf                           ;save int13 result flags
         call    diskIntLeave            ;stop indicators
+        popf                            ;restore int13 result flags
         iret                            ;leave int13
 noindicators:
         pop     bx                      ;restore potentially-changed bx
-        popf                            ;restore flags on entry
+        popf                            ;restore flags from entry
         jmp     ORIG_INT13h
 
 resident_code_size equ offset $

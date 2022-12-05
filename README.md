@@ -58,6 +58,7 @@ If playing digitized audio through the PC speaker, such as in RealSound games, t
 ## Future Improvements
 
 - Add support for missing modes < 13h (Hercules graphics, Tandy, etc.)
+- Make the on-screen LED in graphics mode look nicer, as if it were a sprite overlay on the background
 - Explore potential size/speed improvements, such as only installing and calling the exact code paths needed
 
 ## Acknowledgements

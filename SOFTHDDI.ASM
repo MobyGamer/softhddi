@@ -540,7 +540,6 @@ IF NOBIOSMODE
         call    draw_mode4
         pop     di
 ENDIF
-        nop
         inc     di                      ;first char attribute is at offset 1
 IF REMOVESNOW
         cmp     [vidcard],h_CGA         ;hold up, is this a real CGA card?
@@ -604,7 +603,6 @@ IF NOBIOSMODE
         call    eras_mode4
         pop     di
 ENDIF
-        nop
         inc     di                      ;first char attribute is at offset 1
         mov     ax,[word ptr oldVTXT]   ;retrieve what we need to restore
 IF REMOVESNOW
@@ -866,16 +864,27 @@ ISP_HEADER 13h
 doindicators:
         pop     bx                      ;restore changed bx
         call    diskIntEnter            ;start indicators
-        ;Simulate interrupt call to original INT 13h
-        ;pushf                          ;not needed, orig. flags already pushed
+        popf                            ;restore flags from entrypoint
+        pushf                           ;simulate INT call
         call    ORIG_INT13h             ;pass to original disk interrupt
-        pushf                           ;save int13 result flags
+        pushf                           ;save INT 13h result flags
         call    diskIntLeave            ;stop indicators
-        popf                            ;restore int13 result flags
+        popf                            ;restore INT 13h result flags
+        ;To pass the results as if they were ours, patch them into stack frame
+        push    bp
+        mov     bp,sp                   ;bp+0 = saved bp
+                                        ;bp+2 = ip
+                                        ;bp+4 = cs
+                                        ;bp+6 = flags
+        push    ax
+        lahf                            ;ah = flags
+        mov     byte ptr [bp+6],ah      ;patch flags into stack frame
+        pop     ax
+        pop     bp
         iret                            ;leave int13
 noindicators:
         pop     bx                      ;restore potentially-changed bx
-        popf                            ;restore flags from entry
+        popf                            ;restore flags from entrypoint
         jmp     ORIG_INT13h
 
 resident_code_size equ offset $

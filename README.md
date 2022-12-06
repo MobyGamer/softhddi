@@ -77,3 +77,5 @@ Information on determining PC vs. AT 8255 from Kris Heidenstrom (RIP).
 Methodology for detecting video hardware adapted from Richard Wilton.
 
 Greetz to VileR, who drew a CGA mode4+mode6 "LED" bitmap on short notice :-)
+
+Thanks to E. C. Masloch for bringing attention to a potentially fatal bug.
